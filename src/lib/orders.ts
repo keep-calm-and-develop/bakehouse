@@ -10,7 +10,7 @@ import {
 import { PROCESSES } from "@/constants";
 import { firestore } from "@/firebase";
 import { parseQuerySnapshot } from "@/lib/firestore";
-import type { Order, OrdersByProcess } from "@/types/order";
+import type { Order, OrdersByProcess, ProcessKey } from "@/types/order";
 
 export const EXCLUDED_ORDER_STATUSES = new Set([
   "CANCELLED",
@@ -18,12 +18,16 @@ export const EXCLUDED_ORDER_STATUSES = new Set([
   "COMPLETED",
 ]);
 
-const PROCESS_KEYS = PROCESSES.map(({ value }) => value);
+const PROCESS_KEYS = PROCESSES.map(({ value }) => value) as ProcessKey[];
 
 export const emptyOrders = (): OrdersByProcess =>
-  Object.fromEntries(
-    PROCESSES.map(({ value }) => [value, []]),
-  ) as OrdersByProcess;
+  PROCESSES.reduce(
+    (grouped, { value }) => {
+      grouped[value] = [];
+      return grouped;
+    },
+    {} as OrdersByProcess,
+  );
 
 export function getDayBounds(day: Date) {
   return {
