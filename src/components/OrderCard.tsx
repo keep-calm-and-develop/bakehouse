@@ -3,12 +3,18 @@ import type { Order } from "@/types/order";
 
 interface OrderCardProps {
   order: Order;
+  onSelect: (order: Order) => void;
 }
 
-export function OrderCard({ order }: OrderCardProps) {
-  const properties = order.properties;
+export function OrderCard({ order, onSelect }: OrderCardProps) {
+  const properties = order.properties?.slice(0, 5) ?? [];
+
   return (
-    <article className="flex min-h-28 flex-col gap-2 rounded-lg border border-border bg-background p-3 shadow-xs transition-colors hover:border-primary/40 hover:bg-card">
+    <button
+      type="button"
+      onClick={() => onSelect(order)}
+      className="flex min-h-28 w-full flex-col gap-2 rounded-lg border border-border bg-background p-3 text-left shadow-xs transition-all hover:border-primary/40 hover:bg-card hover:shadow-sm active:scale-[0.99]"
+    >
       <div className="space-y-1">
         <p className="text-sm font-semibold text-foreground">
           {order.productType ?? "Untitled order"}
@@ -23,7 +29,7 @@ export function OrderCard({ order }: OrderCardProps) {
           {properties
             .filter((property) =>
               [property.cake, property.filling, property.frosting].some(
-                (value) => value && value.trim() && value !== "—",
+                (value) => value?.trim(),
               ),
             )
             .map((property, index) => (
@@ -45,6 +51,6 @@ export function OrderCard({ order }: OrderCardProps) {
       <div className="mt-auto">
         <StatusBadge status={order.status} />
       </div>
-    </article>
+    </button>
   );
 }

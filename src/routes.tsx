@@ -12,7 +12,7 @@ export function AppRoutes() {
         <Route
           path="/login"
           element={
-            <main className="flex min-h-svh items-center justify-center p-4">
+            <main className="flex min-h-svh items-center justify-center from-background to-muted/30 p-4">
               <LoginPage />
             </main>
           }

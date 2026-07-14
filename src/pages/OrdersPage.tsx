@@ -24,7 +24,7 @@ export function OrdersPage() {
       <header className="sticky top-0 z-10 -mx-1 rounded-lg border border-border bg-background/95 px-4 py-3 shadow-sm backdrop-blur supports-backdrop-filter:bg-background/80">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs font-medium tracking-wide text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">
               Bitter Sweet Symphony
             </p>
             <h1 className="truncate text-xl font-semibold text-foreground">
