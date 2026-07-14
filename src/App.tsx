@@ -1,16 +1,11 @@
-import { Routes, Route } from "react-router";
-
-const Home = () => <h2>Home Page</h2>;
-const Login = () => <h2>Login Page</h2>;
+import { AuthBootstrap } from "@/components/auth/AuthBootstrap";
+import { AppRoutes } from "@/routes";
 
 function App() {
   return (
-    <main className="container p-4">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </main>
+    <AuthBootstrap>
+      <AppRoutes />
+    </AuthBootstrap>
   );
 }
 
