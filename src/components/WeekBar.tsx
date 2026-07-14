@@ -30,10 +30,7 @@ function getProductionWeekDays(anchor: Date) {
 }
 
 export function WeekBar({ selectedDay, onChange }: WeekBarProps) {
-  const weekDays = useMemo(
-    () => getProductionWeekDays(selectedDay),
-    [selectedDay],
-  );
+  const weekDays = useMemo(() => getProductionWeekDays(new Date()), []);
 
   return (
     <section
