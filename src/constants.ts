@@ -56,12 +56,15 @@ export const PROCESSES = [
   },
 ] as const;
 
-export const PROCESSES_STATUS_MAP = {
+export const PROCESSES_STATUS_MAP: Record<
+  (typeof PROCESSES)[number]["value"],
+  string
+> = {
   layering: "PENDING",
   finishing: "LAYERED",
   fondantFinishing: "FINISHED",
   decorating: "FONDANT_FINISHED",
-} as const;
+};
 
 export const NEXT_STATUS_MAPPING = {
   PENDING: "LAYERED",

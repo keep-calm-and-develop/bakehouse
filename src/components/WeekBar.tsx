@@ -1,12 +1,4 @@
-import {
-  addDays,
-  format,
-  isSameDay,
-  isTuesday,
-  isWednesday,
-  nextTuesday,
-  previousWednesday,
-} from "date-fns";
+import { addDays, format, isSameDay, startOfDay } from "date-fns";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
@@ -15,22 +7,26 @@ interface WeekBarProps {
   onChange: (date: Date) => void;
 }
 
-function getProductionWeekDays(anchor: Date) {
-  const wednesday = isWednesday(anchor) ? anchor : previousWednesday(anchor);
-  const days = [wednesday];
+const DAYS_BEFORE_TODAY = 1;
+const DAYS_AFTER_TODAY = 13;
 
-  for (let index = 1; index <= 5; index += 1) {
-    days.push(addDays(wednesday, index));
+function getDayRangeFromToday(anchor: Date) {
+  const today = startOfDay(anchor);
+  const days: Date[] = [];
+
+  for (
+    let offset = -DAYS_BEFORE_TODAY;
+    offset <= DAYS_AFTER_TODAY;
+    offset += 1
+  ) {
+    days.push(addDays(today, offset));
   }
-
-  const tuesday = isTuesday(anchor) ? anchor : nextTuesday(anchor);
-  days.push(tuesday);
 
   return days;
 }
 
 export function WeekBar({ selectedDay, onChange }: WeekBarProps) {
-  const weekDays = useMemo(() => getProductionWeekDays(new Date()), []);
+  const dayRange = useMemo(() => getDayRangeFromToday(new Date()), []);
 
   return (
     <section
@@ -38,14 +34,15 @@ export function WeekBar({ selectedDay, onChange }: WeekBarProps) {
       className="rounded-lg border border-border bg-card p-3 shadow-sm"
     >
       <div className="mb-3 flex items-center justify-between gap-2 px-1">
-        <p className="text-sm font-medium text-foreground">Production week</p>
+        <p className="text-sm font-medium text-foreground">Upcoming days</p>
         <p className="text-xs text-muted-foreground">
-          {format(weekDays[0], "d MMM")} – {format(weekDays[6], "d MMM yyyy")}
+          {format(dayRange[0], "d MMM")} –{" "}
+          {format(dayRange[dayRange.length - 1], "d MMM yyyy")}
         </p>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 sm:gap-2">
-        {weekDays.map((date) => {
+      <div className="flex gap-1 overflow-x-auto pb-1 sm:gap-2">
+        {dayRange.map((date) => {
           const selected = isSameDay(date, selectedDay);
           const isToday = isSameDay(date, new Date());
 
@@ -56,7 +53,7 @@ export function WeekBar({ selectedDay, onChange }: WeekBarProps) {
               aria-pressed={selected}
               onClick={() => onChange(date)}
               className={cn(
-                "flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border px-1 py-2 text-center transition-colors",
+                "flex min-h-16 min-w-14 shrink-0 flex-col items-center justify-center gap-1 rounded-lg border px-2 py-2 text-center transition-colors sm:min-w-16",
                 selected
                   ? "border-primary bg-primary text-primary-foreground shadow-sm"
                   : "border-transparent bg-muted/40 text-foreground hover:bg-muted",
@@ -68,7 +65,9 @@ export function WeekBar({ selectedDay, onChange }: WeekBarProps) {
               <span
                 className={cn(
                   "text-xs font-medium uppercase tracking-wide",
-                  selected ? "text-primary-foreground/90" : "text-muted-foreground",
+                  selected
+                    ? "text-primary-foreground/90"
+                    : "text-muted-foreground",
                 )}
               >
                 {format(date, "EEE")}
